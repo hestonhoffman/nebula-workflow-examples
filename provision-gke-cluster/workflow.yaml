@@ -7,31 +7,31 @@ steps:
   input:
     - echo "Initializing workflow - Nebula Provision Demo"
     - echo "Provisioning a GKE cluster"
-- name: provision-nebula-demo
-  image: gcr.io/nebula-tasks/nebula-terraform:57d9f2b
+- name: provision-cluster
+  image: gcr.io/nebula-tasks/nebula-terraform:bf8ecb9
   spec:
-    vars:
-      gcp_region: us-west1
-      gcp_location: us-west1
-      gcp_project: docs-pfc
-    workspace: nebula-demo
-    directory: provision-gke-cluster/infra/
+    provider: gcp
+    project: docs-pfc
+    clusterName: nebula-test
     credentials:
       credentials.json:
         $type: Secret
         name: credentials
+    stateStorename: nebula-bucket
+    zones: us-west2-b
+    region: us-west2  
     git:
       name: nebula-workflow-examples
-      repository: https://github.com/puppetlabs/nebula-workflow-examples.git
+      repository: https://github.com/hestonhoffman/nebula-workflow-examples.git
   dependsOn:
   - init-workflow
 - name: slack-notify
-  image: gcr.io/nebula-tasks/nebula-slack-notification:57d9f2b
+  image: gcr.io/nebula-tasks/nebula-slack-notification:bf8ecb9
   spec:
     apitoken:
       $type: Secret
       name: slack-token
     channel: "#heston-test"
-    message: "~magic"
+    message: "~magic "
   dependsOn:
-  - provision-nebula-demo
+  - provision-cluster
