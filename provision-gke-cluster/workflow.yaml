@@ -32,6 +32,6 @@ steps:
       $type: Secret
       name: slack-token
     channel: "#heston-test"
-    message: "~magic.."
+    message: "Sig?"
   dependsOn:
   - provision-cluster
