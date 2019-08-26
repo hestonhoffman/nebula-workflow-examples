@@ -20,9 +20,15 @@ steps:
       credentials.json:
         $type: Secret
         name: credentials
-    git:
-     name: nebula-workflow-examples
-     repository: https://github.com/hestonhoffman/nebula-workflow-examples
+  git:
+    ssh_key:
+      $type: Secret
+      name: ssh_key
+    known_hosts:
+      $type: Secret
+      name: known_hosts
+    name: nebula-workflow-examples
+    repository: git@github.com:hestonhoffman/nebula-workflow-examples.git
   dependsOn:
   - init-workflow
 - name: slack-notify
