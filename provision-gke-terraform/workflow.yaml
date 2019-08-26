@@ -14,15 +14,21 @@ steps:
       gcp_region: us-west1
       gcp_location: us-west1-b
       gcp_project: heston-nebula
-    workspace: nebula-demo
+    workspace: heston-demo
     directory: provision-gke-terraform/infra/
     credentials:
       credentials.json:
         $type: Secret
         name: credentials
     git:
-      name: nebula-workflow-examples
-      repository: https://github.com/hestonhoffman/nebula-workflow-examples.git
+    ssh_key:
+      $type: Secret
+      name: ssh_key
+    known_hosts:
+      $type: Secret
+      name: known_hosts
+    name: nebula-workflow-examples
+    repository: git@github.com:hestonhoffman/nebula-workflow-examples.git
   dependsOn:
   - init-workflow
 - name: slack-notify
