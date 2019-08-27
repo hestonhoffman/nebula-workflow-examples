@@ -21,14 +21,8 @@ steps:
         $type: Secret
         name: credentials
     git:
-      ssh_key:
-        $type: Secret
-        name: ssh_key
-      known_hosts:
-        $type: Secret
-        name: known_hosts
       name: nebula-workflow-examples
-      repository: git@github.com:hestonhoffman/nebula-workflow-examples.git
+      repository: https://github.com/hestonhoffman/nebula-workflow-examples
   dependsOn:
   - init-workflow
 - name: slack-notify
@@ -38,6 +32,6 @@ steps:
       $type: Secret
       name: slack-token
     channel: "#nebula-workflows"
-    message: "Provisioning K8s with Terraform succeeded! :Hooray:!"
+    message: "Heston provisioned a K8s cluster with Terraform! :Hooray:!"
   dependsOn:
   - provision-gke-with-terraform
