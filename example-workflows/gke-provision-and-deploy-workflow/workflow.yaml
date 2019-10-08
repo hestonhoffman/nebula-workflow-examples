@@ -4,8 +4,6 @@ description: Nebula Deploy Demo
 parameters:
   project:
     description: The name of the project in Google Cloud Platform
-  kubectl_file_path:
-    description: The path to the kubectl config file
   terraform_state_bucket: 
     description: The name of the bucket you'd like to store terraform state in
   slack_channel:
@@ -55,25 +53,23 @@ steps:
         $type: Parameter
         name: project
     workspace: production
-    directory: infra/
+    directory: example-workflows/gke-provision-and-deploy-workfow/infra/
     credentials:
       credentials.json:
         $type: Secret
         name: credentials
     git:
-      name: woodburndesigns
+      name: nebula-workflow-examples
       ssh_key: 
         $type: Secret
         name: gitkey
-      repository: git@github.com:woodburndesigns/woodburndesigns.git
+      repository: git@github.com:puppetlabs/nebula-workflow-examples.git
 - name: deploy-to-gke
   dependsOn: provision-gke-with-terraform
   image: projectnebula/kubectl
   spec:
     command: apply
-    file: 
-      $type: Parameter
-      name: kubectl_file_path
+    file: example-workflows/gke-provision-and-deploy-workflow/deploy/deploy.yaml
     namespace: default
     cluster:
       name: k8scluster
@@ -95,12 +91,11 @@ steps:
         ports:
         - containerPort: 80    
     git:
-      name: woodburndesigns
+      name: nebula-workflow-examples
       ssh_key: 
         $type: Secret
         name: gitkey
-      repository: git@github.com:woodburndesigns/woodburndesigns.git
-    
+      repository: git@github.com:puppetlabs/nebula-workflow-examples.git
 - name: slack-notify
   dependsOn:
     - deploy-to-gke
