@@ -21,7 +21,7 @@ steps:
       rm google-cloud-sdk-264.0.0-linux-x86_64.tar.gz &&
       PATH=/workspace/google-cloud-sdk/bin:$PATH &&
       PROJECT=$(ni get -p {.gcp_project}) &&
-      TERRAFORM_STATE_BUCKET=$(ni get -p {.backendConfig.bucket}) &&
+      TERRAFORM_STATE_BUCKET=$(ni get -p {.bucket}) &&
       ni get -p {.credentials} &&
       ni credentials config &&
       gcloud auth activate-service-account --key-file /workspace/credentials.json &&
@@ -33,6 +33,9 @@ steps:
     gcp_project: 
       $type: Parameter
       name: project
+    bucket: 
+      $type: Parameter
+      name: terraform_state_bucket
     credentials:
       credentials.json:
         $type: Secret
@@ -53,7 +56,7 @@ steps:
         $type: Parameter
         name: project
     workspace: production
-    directory: example-workflows/gke-provision-and-deploy-workfow/infra/
+    directory: example-workflows/gke-provision-and-deploy-workflow/infra/
     credentials:
       credentials.json:
         $type: Secret
@@ -63,7 +66,6 @@ steps:
       ssh_key: 
         $type: Secret
         name: gitkey
-      branch: gke-provision-and-deploy-workflow
       repository: git@github.com:puppetlabs/nebula-workflow-examples.git
 - name: deploy-to-gke
   dependsOn: provision-gke-with-terraform
@@ -96,7 +98,6 @@ steps:
       ssh_key: 
         $type: Secret
         name: gitkey
-      branch: gke-provision-and-deploy-workflow
       repository: git@github.com:puppetlabs/nebula-workflow-examples.git
 - name: slack-notify
   dependsOn:
